@@ -14,28 +14,54 @@ import {
   MDBInput
 } from "mdbreact";
 
-
-
+import AppSubFolder from './AppSubfolder';
 
 export default class App extends React.Component{
-
-  state = {
-    value: 'Response Message'
-  };
-
+ constructor(){
+   super()
+   this.state = ({
+    value: 'Response Placeholder',
+    textValue : '',
+    showMe: 'Submit',
+    color: 'light-blue'
+   });
+ }
+  
  handleClick() {
- 
-  fetch('http://localhost:8000/')
+  
+ if(this.state.textValue !== ''){
+  this.setState({
+    showMe: 'Loading..........',
+    color: 'light-red'
+  },
+  function() { fetch('http://localhost:8000/')
   .then(resp => resp.json())
   .then((response) => {
     this.setState({
-      value: response.resp
+      value: response.explanation,
+      showMe: 'Submit',
+      color: 'light-blue'
     });
 
   })
   .catch((error)=>{
     console.log(error);
+    this.setState({ 
+      showMe: 'Submit',
+      color: 'light-blue'
+    });
+  }) }
+  );
+  
+} else {
+  alert("Please Raise a Question in 'Type Your Message Input Box'")
+}
 
+}
+
+onChangeMessage(event) {
+  this.setState({
+    textValue: event.target.value
   })
 }
 render(){
@@ -67,18 +93,19 @@ render(){
                   label="Type your Message"
                   icon="lock"
                   group
-                  type="password"
+                  type="text"
                   validate
+                  onChange = {(event)=>this.onChangeMessage(event)}
                 />
               </div>
     
             <div className="text-center mt-4">
               <MDBBtn
-                color="light-blue"
+                color={this.state.color}
                 className="mb-3"
-                onClick={this.handleClick}
+                onClick={() => this.handleClick()}
               >
-                Submit
+                {this.state.showMe}
               </MDBBtn>
             </div>
             </form>
@@ -89,11 +116,7 @@ render(){
               </div>
             </MDBModalFooter>
             <div>
-            <MDBInput
-                  group
-                  type="text"
-                  value={this.state.value}
-                />
+            <AppSubFolder value ={this.state.value}/>
           </div>
           </MDBCardBody>
         </MDBCard>
