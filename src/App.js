@@ -30,23 +30,46 @@ export default class App extends React.Component {
       showMe: 'Submit',
       color: 'light-blue',
       location: '',
-      drop:'food'
+      drop: 'food',
+      sessionId: ""
     });
+    fetch('http://localhost:3001/api/session')
+      .then(resp => resp.json())
+      .then((response) => {
+        this.setState({
+          sessionId: response.result.session_id,
+
+        });
+
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+
+
+
   }
 
   handleClick() {
 
     if (this.state.textValue !== '' && this.state.location !== '') {
+
       this.setState({
         showMe: 'Loading..........',
         color: 'light-red'
       },
         function () {
-          fetch('http://localhost:8000/')
+         
+          fetch('http://localhost:3001/api/message', {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ "session_id": this.state.sessionId, "input": { "message_type": "text", "text": this.state.textValue } })
+          })
             .then(resp => resp.json())
             .then((response) => {
               this.setState({
-                value: response.explanation,
+                value: response.result.output.generic[0].text,
                 showMe: 'Submit',
                 color: 'light-blue'
               });
@@ -120,9 +143,9 @@ export default class App extends React.Component {
                       />
                     </div>
                     <div className="text-left mt-4">
-                      <MDBDropdown onSelect={(event)=>this.onChangeDropdown(event)}>
+                      <MDBDropdown onSelect={(event) => this.onChangeDropdown(event)}>
                         <MDBDropdownToggle caret color="primary">
-                        Services Offered
+                          Services Offered
                         </MDBDropdownToggle>
                         <MDBDropdownMenu basic>
                           <MDBDropdownItem>Food</MDBDropdownItem>
