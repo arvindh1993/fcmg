@@ -33,7 +33,7 @@ export default class App extends React.Component {
       drop: 'food',
       sessionId: ""
     });
-    fetch('http://localhost:3001/api/session')
+    fetch('https://covid-assistant-simpl.eu-gb.mybluemix.net/api/session')
       .then(resp => resp.json())
       .then((response) => {
         this.setState({
@@ -61,7 +61,7 @@ export default class App extends React.Component {
       },
         function () {
          
-          fetch('http://localhost:3001/api/message', {
+          fetch('https://covid-assistant-simpl.eu-gb.mybluemix.net/api/message', {
             method: 'post',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ "session_id": this.state.sessionId, "input": { "message_type": "text", "text": this.state.textValue } })
