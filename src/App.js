@@ -64,7 +64,7 @@ export default class App extends React.Component {
           fetch('https://covid-assistant-simpl.eu-gb.mybluemix.net/api/message', {
             method: 'post',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ "session_id": this.state.sessionId, "input": { "message_type": "text", "text": this.state.textValue } })
+            body: JSON.stringify({ "session_id": this.state.sessionId, "input": { "message_type": "text", "text": this.state.textValue+" "+this.state.location } })
           })
             .then(resp => resp.json())
             .then((response) => {
